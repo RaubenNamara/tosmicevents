@@ -1,0 +1,10 @@
+# local overrides (live database details)
+config.local.php
+# runtime logs
+storage/logs/*
+!storage/.htaccess
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,55 @@
+# ================= Tosmic Events: web server security =================
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+ServerSignature Off
+# largest request accepted (a 60 MB background video plus form data)
+LimitRequestBody 70000000
+
+# Never serve: config, database dumps, docs, logs, backups, editor/OS leftovers, hidden files, _partials
+<FilesMatch "(^\.|^_|^config(\.local)?\.php$|\.(sql|md|log|ini|bak|old|orig|swp|env|sh|lock|dist|yml|yaml|json)$|~$)">
+    Require all denied
+</FilesMatch>
+
+AddType video/mp4 .mp4
+AddType video/webm .webm
+
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+    # PHP pages set these themselves; this covers images, CSS and JS too
+    Header setifempty X-Content-Type-Options "nosniff"
+    Header setifempty X-Frame-Options "SAMEORIGIN"
+    Header setifempty Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Only normal browser methods (blocks TRACE, PUT, DELETE and other probes)
+    RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|POST)$
+    RewriteRule ^ - [F,L]
+
+    # Private folders, even if their own .htaccess is missing
+    RewriteRule ^(includes|install|storage)(/|$) - [F,L]
+
+    # Live site: always use HTTPS (skipped on this computer / localhost)
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L,NE]
+
+    # ---------- Clean addresses: /about instead of /about.php ----------
+    # Old links ending in .php get a permanent redirect (GET only, so forms still post).
+    RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s([^\s?]*/)index\.php[\s?]
+    RewriteRule ^ %1 [R=301,L,NE]
+    RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s([^\s?]+)\.php[\s?]
+    RewriteCond %{REQUEST_URI} !/(uploads|assets|install)/
+    RewriteRule ^ %1 [R=301,L,NE]
+
+    # A clean address is served by the matching .php file.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+?)/?$ $1.php [L]
+</IfModule>
