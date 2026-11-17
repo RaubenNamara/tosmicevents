@@ -1159,9 +1159,9 @@ label.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: va
 }
 
 /* =========================================================
-   Packages, tablets and computers: modern dark-glass cards
+   Packages, every screen size: modern dark-glass cards
    ========================================================= */
-@media (min-width: 601px) {
+@media all {
   .packages-section { background: var(--navy-900); }
   .packages-section::before {
     display: block; content: ''; position: absolute; inset: 0; transform: none; opacity: 1; height: auto; top: 0;
@@ -1217,7 +1217,7 @@ label.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: va
 
   .pkg-note { color: var(--muted); }
 }
-@media (min-width: 601px) {
+@media all {
   .pkg-card { backdrop-filter: none; -webkit-backdrop-filter: none; background-color: rgba(26, 22, 58, .72); }
   .pkg-card.is-featured { background-color: rgba(46, 22, 66, .8); }
   /* flyer photos carry a gold ring at the edges: zoom slightly so it never shows in the wide frame */
@@ -1225,3 +1225,23 @@ label.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: va
   .pkg-card:hover .pkg-photo img { transform: scale(1.2); }
 }
 @media (min-width: 601px) and (max-width: 1000px) { .pkg-grid > .pkg-card:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 12px); } .pkg-card.is-featured { transform: none; } }
+
+/* Phones: the same dark package card as on computers, stacked (wide photo, Oswald title, gold price) */
+@media (max-width: 600px) {
+  .pkg-grid { max-width: 440px; margin: 0 auto; gap: 22px; padding-top: 8px; }
+  .pkg-card { display: flex; flex-direction: column; padding: 10px 10px 16px; border-radius: 22px; }
+  .pkg-card.is-featured, .pkg-card.is-featured:hover { transform: none; }
+  .pkg-card .pkg-photo { width: 100%; height: auto; aspect-ratio: 4 / 3; margin: 0; border: 0; border-radius: 16px; grid-row: auto; grid-column: auto; }
+  .pkg-card .pkg-body { display: flex; flex-direction: column; flex: 1; padding: 14px 6px 0; text-align: left; }
+  .pkg-card .pkg-body h3 { font-family: 'Oswald', 'Arial Narrow', sans-serif; text-transform: uppercase; letter-spacing: .01em; font-weight: 700; color: #fff; font-size: 1.5rem; line-height: 1.1; margin: 0 0 .25em; padding: 0; align-self: stretch; }
+  .pkg-card .pkg-tagline { font-size: .86rem; margin: 0 0 14px; }
+  .pkg-card .pkg-list { grid-template-columns: 1fr; gap: 8px; margin: 0 0 16px; }
+  .pkg-card .pkg-list li { font-size: .9rem; padding-left: 28px; line-height: 1.4; }
+  .pkg-card .pkg-list li::before { width: 18px; height: 18px; font-size: .55rem; top: 1px; }
+  .pkg-card .pkg-price { margin-top: auto; padding: 14px 0; border-top: 1px dashed rgba(255, 255, 255, .14); flex-direction: row; align-items: baseline; justify-content: flex-start; gap: 8px; }
+  .pkg-card .pkg-price small { font-size: .72rem; }
+  .pkg-card .pkg-price strong { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; letter-spacing: .01em; font-size: 2rem; }
+  .pkg-card .btn-block { margin-top: 0; padding: .85em 1em; font-size: .92rem; }
+  .pkg-badge { top: 20px; left: 20px; right: auto; font-size: .66rem; padding: 5px 10px; }
+  .pkg-card .pkg-tagline, .pkg-card .pkg-list, .pkg-card .pkg-price, .pkg-card .btn-block { align-self: stretch; }
+}
